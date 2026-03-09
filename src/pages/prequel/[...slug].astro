@@ -1,0 +1,35 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const prequels = await getCollection('prequel');
+  const sorted = prequels.sort((a, b) => a.data.episode - b.data.episode);
+
+  return sorted.map((entry, i) => ({
+    params: { slug: entry.id.replace('.md', '') },
+    props: {
+      entry,
+      prev: i > 0 ? sorted[i - 1] : null,
+      next: i < sorted.length - 1 ? sorted[i + 1] : null,
+    },
+  }));
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  breadcrumb={{ label: '프리퀄', href: '/prequel' }}
+  meta={[
+    { label: '회차', value: entry.data.episode === 0 ? '프롤로그' : `${entry.data.episode}화` },
+    { label: '시리즈', value: 'GPT 9인과 서비스를 설계하다' },
+  ]}
+  prevArticle={prev ? { title: prev.data.title, href: `/prequel/${prev.id.replace('.md', '')}` } : undefined}
+  nextArticle={next ? { title: next.data.title, href: `/prequel/${next.id.replace('.md', '')}` } : undefined}
+>
+  <Content />
+</ArticleLayout>

@@ -23,4 +23,14 @@ const tech = defineCollection({
   }),
 });
 
-export const collections = { story, tech };
+const prequel = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/prequel' }),
+  schema: z.object({
+    title: z.string(),
+    episode: z.number(),
+    description: z.string(),
+    series: z.string(),
+  }),
+});
+
+export const collections = { story, tech, prequel };
