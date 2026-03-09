@@ -1,0 +1,58 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+
+const stories = (await getCollection('story')).sort((a, b) => a.data.episode - b.data.episode);
+const techs = (await getCollection('tech')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<BaseLayout title="첵잇 개발일지">
+  <!-- 히어로 -->
+  <section class="mb-16">
+    <p class="text-lg text-muted leading-relaxed">
+      먹거리에 진심인 사람이 AI와 함께 식품 성분 앱을 만들어가는 이야기
+    </p>
+  </section>
+
+  <!-- 운영 블로그 미리보기 -->
+  <section class="mb-16">
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-gray-900">운영 블로그</h2>
+      <a href="/story" class="text-sm text-accent hover:text-green-700">전체 보기 &rarr;</a>
+    </div>
+    <p class="text-sm text-muted mb-6">비개발자도 읽을 수 있는 연재물. 의사결정, 시행착오, 실패와 발견의 기록.</p>
+    <div class="space-y-3">
+      {stories.slice(0, 5).map(s => (
+        <a href={`/story/${s.id.replace('.md', '')}`} class="block group">
+          <div class="flex items-baseline gap-3 py-2 border-b border-gray-100 group-hover:border-accent transition-colors">
+            <span class="text-sm text-muted w-16 shrink-0">
+              {s.data.episode === 0 ? '프롤로그' : `${s.data.episode}화`}
+            </span>
+            <span class="text-gray-800 group-hover:text-accent transition-colors">{s.data.title.replace(/^\d+화:\s*/, '').replace(/^프롤로그:\s*/, '')}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- 기술 블로그 미리보기 -->
+  <section>
+    <div class="flex items-center justify-between mb-6">
+      <h2 class="text-xl font-bold text-gray-900">기술 블로그</h2>
+      <a href="/tech" class="text-sm text-accent hover:text-green-700">전체 보기 &rarr;</a>
+    </div>
+    <p class="text-sm text-muted mb-6">갈림길 → 선택 → 구현 → 결과. "어떻게, 왜 이렇게"를 다룹니다.</p>
+    <div class="space-y-3">
+      {techs.slice(0, 5).map(t => (
+        <a href={`/tech/${t.id.replace('.md', '')}`} class="block group">
+          <div class="flex items-baseline gap-3 py-2 border-b border-gray-100 group-hover:border-accent transition-colors">
+            <span class="text-sm text-muted w-16 shrink-0">
+              Phase {t.data.phase}
+            </span>
+            <span class="text-gray-800 group-hover:text-accent transition-colors">{t.data.title}</span>
+          </div>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>

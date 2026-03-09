@@ -1,0 +1,66 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+interface Props {
+  title: string;
+  description?: string;
+  breadcrumb: { label: string; href: string };
+  prevArticle?: { title: string; href: string };
+  nextArticle?: { title: string; href: string };
+  meta?: { label: string; value: string; html?: string }[];
+}
+
+const { title, description, breadcrumb, prevArticle, nextArticle, meta } = Astro.props;
+---
+
+<BaseLayout title={title} description={description}>
+  <!-- 브레드크럼 -->
+  <div class="mb-8">
+    <a href={breadcrumb.href} class="text-sm text-muted hover:text-accent transition-colors">
+      &larr; {breadcrumb.label}
+    </a>
+  </div>
+
+  <!-- 제목 -->
+  <h1 class="text-2xl font-bold text-gray-900 mb-4 leading-tight">{title}</h1>
+
+  <!-- 메타 정보 -->
+  {meta && meta.length > 0 && (
+    <div class="flex flex-wrap gap-3 mb-8 text-sm text-muted">
+      {meta.map(m => (
+        <span class="bg-gray-50 px-2.5 py-1 rounded">
+          {m.label}: {m.html ? <Fragment set:html={m.html} /> : m.value}
+        </span>
+      ))}
+    </div>
+  )}
+
+  <hr class="mb-8 border-border" />
+
+  <!-- 본문 -->
+  <article class="prose">
+    <slot />
+  </article>
+
+  <!-- 이전/다음 네비게이션 -->
+  {(prevArticle || nextArticle) && (
+    <nav class="mt-16 pt-8 border-t border-border flex justify-between">
+      <div>
+        {prevArticle && (
+          <a href={prevArticle.href} class="nav-link">
+            <span>&larr;</span>
+            <span>{prevArticle.title}</span>
+          </a>
+        )}
+      </div>
+      <div>
+        {nextArticle && (
+          <a href={nextArticle.href} class="nav-link">
+            <span>{nextArticle.title}</span>
+            <span>&rarr;</span>
+          </a>
+        )}
+      </div>
+    </nav>
+  )}
+</BaseLayout>

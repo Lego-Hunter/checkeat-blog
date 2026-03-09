@@ -1,0 +1,77 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary: #1a1a2e;
+  --color-accent: #16a34a;
+  --color-accent-light: #bbf7d0;
+  --color-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-bg-code: #f8fafc;
+  --font-sans: "Pretendard Variable", "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+  --font-mono: "JetBrains Mono", "Fira Code", ui-monospace, monospace;
+}
+
+/* 프로즈(산문) 스타일 - 마크다운 본문용 */
+.prose {
+  @apply text-gray-800 leading-relaxed;
+  max-width: 72ch;
+}
+.prose h2 {
+  @apply text-xl font-bold mt-12 mb-4 text-gray-900 border-b border-border pb-2;
+}
+.prose h3 {
+  @apply text-lg font-semibold mt-8 mb-3 text-gray-900;
+}
+.prose p {
+  @apply mb-4;
+}
+.prose ul, .prose ol {
+  @apply mb-4 pl-6;
+}
+.prose ul {
+  @apply list-disc;
+}
+.prose ol {
+  @apply list-decimal;
+}
+.prose li {
+  @apply mb-1;
+}
+.prose a {
+  @apply text-accent underline underline-offset-2 hover:text-green-700 transition-colors;
+}
+.prose blockquote {
+  @apply border-l-4 border-accent-light pl-4 my-6 text-muted italic;
+}
+.prose code {
+  @apply bg-bg-code text-sm px-1.5 py-0.5 rounded font-mono;
+}
+.prose pre {
+  @apply bg-bg-code border border-border rounded-lg p-4 my-6 overflow-x-auto text-sm;
+}
+.prose pre code {
+  @apply bg-transparent p-0;
+}
+.prose table {
+  @apply w-full border-collapse my-6 text-sm;
+}
+.prose th {
+  @apply bg-gray-50 border border-border px-3 py-2 text-left font-semibold;
+}
+.prose td {
+  @apply border border-border px-3 py-2;
+}
+.prose hr {
+  @apply my-8 border-border;
+}
+.prose strong {
+  @apply font-semibold text-gray-900;
+}
+.prose img {
+  @apply rounded-lg my-6;
+}
+
+/* 네비게이션 링크 다음/이전 */
+.nav-link {
+  @apply inline-flex items-center gap-1 text-sm text-muted hover:text-accent transition-colors;
+}

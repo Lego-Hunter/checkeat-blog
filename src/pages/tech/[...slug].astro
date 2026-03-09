@@ -1,0 +1,60 @@
+---
+import ArticleLayout from '../../layouts/ArticleLayout.astro';
+import { getCollection, render } from 'astro:content';
+
+export async function getStaticPaths() {
+  const techs = await getCollection('tech');
+  const sorted = techs.sort((a, b) => a.data.order - b.data.order);
+
+  return sorted.map((entry, i) => ({
+    params: { slug: entry.id.replace('.md', '') },
+    props: {
+      entry,
+      prev: i > 0 ? sorted[i - 1] : null,
+      next: i < sorted.length - 1 ? sorted[i + 1] : null,
+    },
+  }));
+}
+
+const { entry, prev, next } = Astro.props;
+const { Content } = await render(entry);
+
+const seriesLabel = entry.data.series === 'public-data' ? '공공데이터 레시피' : 'AI 협업 개발기';
+
+// storyRef "5화", "5화, 20화" 등을 링크로 변환
+const storyEpisodeMap: Record<number, string> = {
+  0: '00_prologue', 1: '01_label', 2: '02_benchmark', 3: '03_scope',
+  4: '04_opendata', 5: '05_api', 6: '06_database', 7: '07_haccp',
+  8: '08_parsing', 9: '09_bracket', 10: '10_synonym', 11: '11_matching',
+  12: '12_shrimp', 13: '13_integrity', 14: '14_nutrition', 15: '15_additive',
+  16: '16_regulation', 17: '17_stop', 18: '18_deploy', 19: '19_business',
+  20: '20_letter', 21: '21_here',
+};
+
+const storyRefHtml = entry.data.storyRef
+  .split(/,\s*/)
+  .map((ref: string) => {
+    const num = parseInt(ref.replace('화', ''));
+    const slug = storyEpisodeMap[num];
+    if (slug) {
+      return `<a href="/story/${slug}" class="text-accent underline underline-offset-2 hover:text-green-700">운영 블로그 ${ref}</a>`;
+    }
+    return `운영 블로그 ${ref}`;
+  })
+  .join(', ');
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  description={`Phase ${entry.data.phase}: ${entry.data.phaseName}`}
+  breadcrumb={{ label: '기술 블로그', href: '/tech' }}
+  meta={[
+    { label: 'Phase', value: `${entry.data.phase} — ${entry.data.phaseName}` },
+    { label: '시리즈', value: seriesLabel },
+    { label: '대응 스토리', value: '', html: storyRefHtml },
+  ]}
+  prevArticle={prev ? { title: prev.data.title, href: `/tech/${prev.id.replace('.md', '')}` } : undefined}
+  nextArticle={next ? { title: next.data.title, href: `/tech/${next.id.replace('.md', '')}` } : undefined}
+>
+  <Content />
+</ArticleLayout>

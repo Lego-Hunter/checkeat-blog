@@ -1,0 +1,44 @@
+---
+import '../styles/global.css';
+
+interface Props {
+  title: string;
+  description?: string;
+}
+
+const { title, description = '파싱이 뭔지 모르는 사람이 AI와 함께 식품 성분 앱을 만들어가는 이야기' } = Astro.props;
+const fullTitle = title === '첵잇 개발일지' ? title : `${title} — 첵잇 개발일지`;
+---
+
+<!doctype html>
+<html lang="ko">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <title>{fullTitle}</title>
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css" />
+  </head>
+  <body class="bg-white text-gray-900 font-sans antialiased">
+    <header class="border-b border-border">
+      <nav class="max-w-3xl mx-auto px-6 py-4 flex items-center justify-between">
+        <a href="/" class="text-lg font-bold text-primary hover:text-accent transition-colors">
+          첵잇 개발일지
+        </a>
+        <div class="flex gap-6 text-sm">
+          <a href="/story" class="text-muted hover:text-gray-900 transition-colors">운영 블로그</a>
+          <a href="/tech" class="text-muted hover:text-gray-900 transition-colors">기술 블로그</a>
+        </div>
+      </nav>
+    </header>
+    <main class="max-w-3xl mx-auto px-6 py-10">
+      <slot />
+    </main>
+    <footer class="border-t border-border mt-20">
+      <div class="max-w-3xl mx-auto px-6 py-8 text-sm text-muted">
+        <p>&copy; 2026 CheckEat. 비개발자의 식품 데이터 프로젝트.</p>
+      </div>
+    </footer>
+  </body>
+</html>
